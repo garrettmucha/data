@@ -1,0 +1,17 @@
+name: Test Rocket Runner2
+on: [push]
+jobs:
+  test:
+    runs-on: [self-hosted, rocket]
+    steps:
+      - uses: actions/checkout@v3
+      - name: Hello from Rocket Runner! 🚀
+        run: |
+          echo "🚀 Hello from rocket-data-runner!"
+          echo "Running on Akash Network for only $15.30/month!"
+          echo "Server info:"
+          echo "  CPU cores: $(nproc)"
+          echo "  Memory: $(free -h | head -2)"
+          echo "  Storage: $(df -h / | tail-1)"
+          echo "  Hostname: $(hostname)"
+          echo "SUCCESS: GitHub Actions runner working perfectly!"
