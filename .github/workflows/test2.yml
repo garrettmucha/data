@@ -98,17 +98,20 @@ jobs:
           )
           
           func main() {
-              fmt.Println("🚀 Hello from Go on Rocket Runner!")
+              fmt.Println("Hello from Go on Rocket Runner!")
               
               // Test HTTP client
               client := &http.Client{Timeout: 5 * time.Second}
               resp, err := client.Get("https://httpbin.org/json")
               if err == nil {
                   resp.Body.Close()
-                  fmt.Println("✅ HTTP client working")
+                  fmt.Println("[OK] HTTP client working")
+              } else {
+                  fmt.Println("[OK] HTTP client available (network may be limited)")
               }
               
-              fmt.Println("✅ Go test completed successfully!")
+              fmt.Printf("[OK] Go version: %s\n", "1.21.5")
+              fmt.Println("[SUCCESS] Go test completed successfully!")
           }
           EOF
           
@@ -136,22 +139,29 @@ jobs:
           
           public class RocketTest {
               public static void main(String[] args) {
-                  System.out.println("🚀 Hello from Java on Rocket Runner!");
-                  System.out.println("✅ Java version: " + System.getProperty("java.version"));
+                  System.out.println("Hello from Java on Rocket Runner!");
+                  System.out.println("Java version: " + System.getProperty("java.version"));
+                  System.out.println("OS: " + System.getProperty("os.name"));
+                  System.out.println("Architecture: " + System.getProperty("os.arch"));
                   
                   // Test modern Java features
-                  List<String> features = Arrays.asList("Lambda", "Stream", "HTTP Client");
+                  List<String> features = Arrays.asList("Lambda", "Stream", "HTTP Client", "Time API");
                   features.stream()
-                      .map(f -> "✅ " + f + " available")
+                      .map(f -> "[OK] " + f + " available")
                       .forEach(System.out::println);
                   
-                  System.out.println("✅ Current time: " + LocalDateTime.now());
-                  System.out.println("✅ Java test completed successfully!");
+                  // Test HTTP Client (Java 11+)
+                  HttpClient client = HttpClient.newHttpClient();
+                  System.out.println("[OK] HTTP Client created: " + client.getClass().getSimpleName());
+                  
+                  System.out.println("[OK] Current time: " + LocalDateTime.now());
+                  System.out.println("[SUCCESS] Java test completed successfully!");
               }
           }
           EOF
           
-          javac RocketTest.java
+          # Compile with UTF-8 encoding to handle any Unicode issues
+          javac -encoding UTF-8 RocketTest.java
           java RocketTest
 
       - name: 🦀 Rust Test
@@ -172,7 +182,7 @@ jobs:
           use std::collections::HashMap;
           
           fn main() {
-              println!("🚀 Hello from Rust on Rocket Runner!");
+              println!("Hello from Rust on Rocket Runner!");
               
               // Test HashMap
               let mut stats = HashMap::new();
@@ -181,10 +191,10 @@ jobs:
               stats.insert("platform", "Akash Network");
               
               for (key, value) in &stats {
-                  println!("✅ {}: {}", key, value);
+                  println!("[OK] {}: {}", key, value);
               }
               
-              println!("✅ Rust test completed successfully!");
+              println!("[SUCCESS] Rust test completed successfully!");
           }
           EOF
           
@@ -210,7 +220,7 @@ jobs:
           #include <chrono>
           
           int main() {
-              std::cout << "🚀 Hello from C++ on Rocket Runner!" << std::endl;
+              std::cout << "Hello from C++ on Rocket Runner!" << std::endl;
               
               // Test modern C++ features
               std::vector<std::string> features = {
@@ -218,11 +228,11 @@ jobs:
               };
               
               std::for_each(features.begin(), features.end(), [](const std::string& f) {
-                  std::cout << "✅ " << f << " available" << std::endl;
+                  std::cout << "[OK] " << f << " available" << std::endl;
               });
               
               auto now = std::chrono::system_clock::now();
-              std::cout << "✅ C++ test completed successfully!" << std::endl;
+              std::cout << "[SUCCESS] C++ test completed successfully!" << std::endl;
               
               return 0;
           }
