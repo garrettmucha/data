@@ -23,6 +23,8 @@ jobs:
           pnpm --version
           
           echo "Creating sample Node.js project..."
+          # Clean up any existing test directory
+          rm -rf /tmp/node-test
           mkdir -p /tmp/node-test
           cd /tmp/node-test
           
@@ -86,6 +88,8 @@ jobs:
           go version
           
           echo "Creating sample Go project..."
+          # Clean up any existing test directory
+          rm -rf /tmp/go-test
           mkdir -p /tmp/go-test
           cd /tmp/go-test
           
@@ -129,6 +133,8 @@ jobs:
           javac -version
           
           echo "Creating sample Java project..."
+          # Clean up any existing test directory
+          rm -rf /tmp/java-test
           mkdir -p /tmp/java-test
           cd /tmp/java-test
           
@@ -196,6 +202,8 @@ jobs:
           fi
           
           echo "Creating sample Rust project..."
+          # Clean up any existing test directory
+          rm -rf /tmp/rust-test
           mkdir -p /tmp/rust-test
           cd /tmp/rust-test
           
@@ -235,6 +243,8 @@ jobs:
           cmake --version
           
           echo "Creating sample C++ project..."
+          # Clean up any existing test directory
+          rm -rf /tmp/cpp-test
           mkdir -p /tmp/cpp-test
           cd /tmp/cpp-test
           
