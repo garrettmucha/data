@@ -346,16 +346,17 @@ jobs:
           echo "=== CPU Performance Test ==="
           echo "🔥 Running CPU benchmark..."
           
-          # CPU intensive task
-          time_start=$(date +%s.%N)
+          # CPU intensive task with timing
+          start_time=$(date +%s)
           python3 -c "
           import math
+          import time
+          start = time.time()
           result = sum(math.sqrt(i) for i in range(1000000))
+          end = time.time()
           print(f'✅ Computed square roots: {result:.2f}')
+          print(f'⏱️ CPU test completed in: {end - start:.3f}s')
           "
-          time_end=$(date +%s.%N)
-          duration=$(echo "$time_end - $time_start" | bc -l)
-          echo "⏱️ CPU test completed in: ${duration}s"
 
       - name: Memory Test
         run: |
@@ -364,10 +365,22 @@ jobs:
           
           python3 -c "
           import sys
+          import time
+          
+          print('📊 Initial memory info:')
+          import os
+          process = os.popen('free -h')
+          print(process.read())
+          
           # Allocate 100MB of data
+          start = time.time()
           data = [i for i in range(10000000)]
+          end = time.time()
+          
           print(f'✅ Allocated list with {len(data)} elements')
           print(f'✅ Memory usage: {sys.getsizeof(data) / 1024 / 1024:.2f} MB')
+          print(f'⏱️ Allocation time: {end - start:.3f}s')
+          
           del data
           print('✅ Memory released successfully')
           "
@@ -377,23 +390,91 @@ jobs:
           echo "=== I/O Performance Test ==="
           echo "💾 Testing disk I/O..."
           
-          # Write test
-          time_start=$(date +%s.%N)
-          dd if=/dev/zero of=/tmp/test_file bs=1M count=100 2>/dev/null
-          time_end=$(date +%s.%N)
-          write_duration=$(echo "$time_end - $time_start" | bc -l)
+          # Write test with time command
+          echo "📝 Write test (100MB)..."
+          time dd if=/dev/zero of=/tmp/test_file bs=1M count=100 2>&1 | grep -E "(copied|real)"
           
-          # Read test  
-          time_start=$(date +%s.%N)
-          dd if=/tmp/test_file of=/dev/null bs=1M 2>/dev/null
-          time_end=$(date +%s.%N)
-          read_duration=$(echo "$time_end - $time_start" | bc -l)
+          # Read test
+          echo "📖 Read test (100MB)..."
+          time dd if=/tmp/test_file of=/dev/null bs=1M 2>&1 | grep -E "(copied|real)"
           
-          echo "✅ Write speed: 100MB in ${write_duration}s"
-          echo "✅ Read speed: 100MB in ${read_duration}s"
+          # File info
+          echo "📁 File info:"
+          ls -lh /tmp/test_file
           
           # Cleanup
           rm -f /tmp/test_file
+          echo "✅ I/O test completed"
+
+      - name: Network Performance Test
+        run: |
+          echo "=== Network Performance Test ==="
+          echo "🌐 Testing network speed..."
+          
+          # Test download speed with curl timing
+          echo "⬇️ Download speed test..."
+          curl -w "✅ Download: %{size_download} bytes in %{time_total}s (avg: %{speed_download} bytes/s)\n" \
+               -o /dev/null -s "https://httpbin.org/bytes/1048576"
+          
+          # Test multiple concurrent requests
+          echo "🔄 Concurrent request test..."
+          start_time=$(date +%s)
+          for i in {1..5}; do
+            curl -s -o /dev/null "https://httpbin.org/delay/1" &
+          done
+          wait
+          end_time=$(date +%s)
+          duration=$((end_time - start_time))
+          echo "✅ 5 concurrent 1-second requests completed in ${duration}s"
+
+      - name: Overall System Performance
+        run: |
+          echo "=== Overall System Performance ==="
+          
+          echo "🖥️ System Information:"
+          echo "  CPU Model: $(grep 'model name' /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)"
+          echo "  CPU Cores: $(nproc)"
+          echo "  CPU MHz: $(grep 'cpu MHz' /proc/cpuinfo | head -1 | cut -d: -f2 | xargs)"
+          
+          echo "💾 Memory Information:"
+          free -h
+          
+          echo "💿 Disk Information:"
+          df -h /
+          
+          echo "📊 Load Average:"
+          uptime
+          
+          echo "🔥 CPU Usage Test (10 seconds):"
+          top -bn1 | grep "Cpu(s)" | head -1
+          
+          # Quick stress test
+          echo "⚡ Quick stress test..."
+          stress_start=$(date +%s)
+          python3 -c "
+          import threading
+          import time
+          
+          def cpu_stress():
+              end_time = time.time() + 5  # 5 seconds
+              while time.time() < end_time:
+                  pass
+          
+          # Start 4 threads (one per core)
+          threads = []
+          for i in range(4):
+              t = threading.Thread(target=cpu_stress)
+              threads.append(t)
+              t.start()
+          
+          for t in threads:
+              t.join()
+              
+          print('✅ Multi-core stress test completed')
+          "
+          stress_end=$(date +%s)
+          stress_duration=$((stress_end - stress_start))
+          echo "⏱️ Stress test duration: ${stress_duration}s"
 
   # Final summary
   summary:
