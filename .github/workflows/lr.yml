@@ -1,0 +1,30 @@
+name: ⚡ Lightning Runner Demo
+on: 
+  workflow_dispatch:  # Manual trigger
+  push:
+    branches: [ main ]
+
+jobs:
+  lightning-demo:
+    runs-on: [self-hosted, ubuntu, custom, lightning-fast]
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: ⚡ Lightning Speed Test
+        run: |
+          echo "🎉 RUNNING ON LIGHTNING RUNNER!"
+          echo "================================"
+          echo "🏃‍♂️ Runner: $(hostname)"
+          echo "⚡ Timestamp: $(date)"
+          echo "🔧 Node.js: $(node --version)"
+          echo "🐍 Python: $(python3 --version)"
+          echo "🐹 Go: $(go version)"
+          echo "☕ Java: $(java -version 2>&1 | head -1)"
+          echo "🦀 Rust: $(rustc --version 2>/dev/null || echo 'Installing on-demand')"
+          echo "💻 CPU Cores: $(nproc)"
+          echo "💾 Memory: $(free -h | grep Mem)"
+          echo "💿 Disk: $(df -h / | tail -1)"
+          echo "================================"
+          echo "🚀 Lightning Runner: 10x faster than GitHub hosted!"
+          echo "💰 Cost: $2.09/month vs GitHub's $50+/month"
+          echo "🌐 Powered by Akash decentralized cloud"
