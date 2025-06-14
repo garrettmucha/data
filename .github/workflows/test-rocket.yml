@@ -2,7 +2,7 @@ name: Test Rocket Runner
 on: [push]
 jobs:
   test:
-    runs-on: [self-hosted, rocket]
+    runs-on: [self-hosted, ubuntu, custom, rocket-free]  # ✅ Correct labels
     steps:
       - uses: actions/checkout@v3
       - name: Hello from Rocket Runner! 🚀
