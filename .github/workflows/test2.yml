@@ -1,0 +1,13 @@
+name: Test Rocket Runner
+on: push
+jobs:
+  test:
+    runs-on: [self-hosted, ubuntu, custom, rocket-free]
+    steps:
+      - uses: actions/checkout@v4
+      - name: Test Node.js
+        run: node --version
+      - name: Test Python  
+        run: python3 --version
+      - name: Test Go
+        run: go version
