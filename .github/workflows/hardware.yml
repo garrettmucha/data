@@ -3,7 +3,7 @@ on: workflow_dispatch
 
 jobs:
   cpu-test:
-    runs-on: [self-hosted, lightning-fast]
+    runs-on: [self-hosted,lightning-fast,ubuntu,custom,marketplace]
     name: 🎯 Real CPU Performance Test
     steps:
       - name: CPU Reality Check
