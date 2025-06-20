@@ -6,7 +6,7 @@ on:
 
 jobs:
   test:
-    runs-on: [self-hosted, lightning-fast]
+    runs-on: [self-hosted,lightning-fast,ubuntu]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
