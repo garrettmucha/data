@@ -7,3 +7,4 @@ jobs:
       - run: echo "🚀 Lightning Runner is working!"
       - run: hostname
       - run: whoami
+ 
