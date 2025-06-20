@@ -1,10 +1,17 @@
 name: Test Lightning Runner
-on: workflow_dispatch
+on: 
+  workflow_dispatch:
+  push:
+    branches: [ main ]
+
 jobs:
   test:
     runs-on: [self-hosted, lightning-fast]
     steps:
-      - run: echo "🚀 Lightning Runner is working!"
-      - run: hostname
-      - run: whoami
- 
+      - name: Checkout code
+        uses: actions/checkout@v4
+      - name: Test runner
+        run: |
+          echo "🚀 Lightning Runner is working!"
+          hostname
+          whoami
